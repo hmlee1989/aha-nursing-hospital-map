@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-search/dist/leaflet-search.min.css" />
 
   <style>
     body {
@@ -40,32 +39,28 @@
       margin: 8px 0 0;
       font-size: 16px;
     }
+    .search-bar {
+      background: #f1f3f5;
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .search-bar input {
+      width: 80%;
+      max-width: 500px;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 2px solid #c10e21;
+      outline: none;
+    }
+    .search-bar input:focus {
+      border-color: #17a2b8;
+    }
     #hospitalMap {
       height: 500px;
       width: 100%;
       border-top: 2px solid #868e96;
-    }
-    /* Style the search bar */
-    .leaflet-control-search {
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
-      border-radius: 8px !important;
-      overflow: hidden !important;
-    }
-    .leaflet-control-search input {
-      border: 2px solid #c10e21 !important;
-      border-radius: 8px !important;
-      padding: 6px 10px !important;
-      width: 200px !important;
-      font-size: 14px !important;
-      color: #132f45 !important;
-    }
-    .leaflet-control-search input:focus {
-      outline: none !important;
-      border-color: #17a2b8 !important;
-    }
-    .leaflet-control-search .search-button {
-      background-color: #c10e21 !important;
-      color: white !important;
     }
   </style>
 </head>
@@ -74,33 +69,37 @@
   <div class="map-container">
     <div class="map-header">
       <h2>Hospital Locations</h2>
-      <p>Explore hospital locations across the U.S. — click markers or use the search bar below.</p>
+      <p>Explore hospital locations across the U.S. — click markers or search below.</p>
     </div>
+
+    <!-- Visible search bar above the map -->
+    <div class="search-bar">
+      <input type="text" id="hospitalSearch" placeholder="🔍 Find a hospital or city..." />
+    </div>
+
     <div id="hospitalMap"></div>
   </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-  <script src="https://unpkg.com/leaflet-control-search/dist/leaflet-search.min.js"></script>
 
   <script>
     (function() {
       const map = L.map('hospitalMap').setView([39.8283, -98.5795], 4);
 
-      // Grayscale tiles
+      // Base tiles
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap contributors © CARTO'
       }).addTo(map);
 
-      // Hospital data
       const hospitals = [
-        {name: "Mayo Clinic", address: "200 First St SW, Rochester, MN 55905", url: "https://www.mayoclinic.org/", lat: 44.0216, lng: -92.4699},
-        {name: "Cleveland Clinic", address: "9500 Euclid Ave, Cleveland, OH 44195", url: "https://my.clevelandclinic.org/", lat: 41.5036, lng: -81.6195},
-        {name: "Johns Hopkins Hospital", address: "1800 Orleans St, Baltimore, MD 21287", url: "https://www.hopkinsmedicine.org/", lat: 39.2965, lng: -76.5920},
-        {name: "Massachusetts General Hospital", address: "55 Fruit St, Boston, MA 02114", url: "https://www.massgeneral.org/", lat: 42.3626, lng: -71.0695},
-        {name: "UCLA Medical Center", address: "757 Westwood Plaza, Los Angeles, CA 90095", url: "https://www.uclahealth.org/", lat: 34.0656, lng: -118.4495},
-        {name: "Mount Sinai Hospital", address: "1468 Madison Ave, New York, NY 10029", url: "https://www.mountsinai.org/", lat: 40.7901, lng: -73.9536},
-        {name: "Texas Medical Center", address: "2450 Holcombe Blvd, Houston, TX 77021", url: "https://www.texasmedicalcenter.org/", lat: 29.7070, lng: -95.4018}
+        {name: "Mayo Clinic", city: "Rochester, MN", address: "200 First St SW, Rochester, MN 55905", url: "https://www.mayoclinic.org/", lat: 44.0216, lng: -92.4699},
+        {name: "Cleveland Clinic", city: "Cleveland, OH", address: "9500 Euclid Ave, Cleveland, OH 44195", url: "https://my.clevelandclinic.org/", lat: 41.5036, lng: -81.6195},
+        {name: "Johns Hopkins Hospital", city: "Baltimore, MD", address: "1800 Orleans St, Baltimore, MD 21287", url: "https://www.hopkinsmedicine.org/", lat: 39.2965, lng: -76.5920},
+        {name: "Massachusetts General Hospital", city: "Boston, MA", address: "55 Fruit St, Boston, MA 02114", url: "https://www.massgeneral.org/", lat: 42.3626, lng: -71.0695},
+        {name: "UCLA Medical Center", city: "Los Angeles, CA", address: "757 Westwood Plaza, Los Angeles, CA 90095", url: "https://www.uclahealth.org/", lat: 34.0656, lng: -118.4495},
+        {name: "Mount Sinai Hospital", city: "New York, NY", address: "1468 Madison Ave, New York, NY 10029", url: "https://www.mountsinai.org/", lat: 40.7901, lng: -73.9536},
+        {name: "Texas Medical Center", city: "Houston, TX", address: "2450 Holcombe Blvd, Houston, TX 77021", url: "https://www.texasmedicalcenter.org/", lat: 29.7070, lng: -95.4018}
       ];
 
       const markers = L.markerClusterGroup();
@@ -111,8 +110,7 @@
         popupAnchor: [0, -30]
       });
 
-      // Add markers
-      hospitals.forEach(h => {
+      const markerList = hospitals.map(h => {
         const marker = L.marker([h.lat, h.lng], { icon: hospitalIcon })
           .bindPopup(`
             <div style='font-family: Aptos, sans-serif; line-height: 1.4;'>
@@ -121,30 +119,31 @@
               <a href='${h.url}' target='_blank' style='color:#17a2b8; text-decoration:none;'>Visit website →</a>
             </div>
           `);
-        marker.bindTooltip(h.name);
         markers.addLayer(marker);
+        marker.hospitalData = h;
+        return marker;
       });
 
       map.addLayer(markers);
 
-      // Add styled search control
-      const searchControl = new L.Control.Search({
-        layer: markers,
-        propertyName: 'name',
-        position: 'topleft',
-        zoom: 8,
-        marker: false,
-        moveToLocation: function(latlng, title, map) {
-          map.setView(latlng, 10);
+      // 🔍 Custom search: matches by name OR city
+      const searchInput = document.getElementById('hospitalSearch');
+      searchInput.addEventListener('input', function() {
+        const query = this.value.trim().toLowerCase();
+        if (!query) return;
+
+        const match = markerList.find(m =>
+          m.hospitalData.name.toLowerCase().includes(query) ||
+          m.hospitalData.city.toLowerCase().includes(query)
+        );
+
+        if (match) {
+          map.setView(match.getLatLng(), 10);
+          match.openPopup();
         }
       });
-
-      searchControl.on('search:locationfound', e => {
-        e.layer.openPopup();
-      });
-
-      map.addControl(searchControl);
     })();
   </script>
 </body>
 </html>
+
