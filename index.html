@@ -87,11 +87,12 @@
     (function() {
       const map = L.map('hospitalMap').setView([39.8283, -98.5795], 4);
 
-      // Base tiles
+      // Base map tiles
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap contributors © CARTO'
       }).addTo(map);
 
+      // Hospital data
       const hospitals = [
         {name: "Mayo Clinic", city: "Rochester, MN", address: "200 First St SW, Rochester, MN 55905", url: "https://www.mayoclinic.org/", lat: 44.0216, lng: -92.4699},
         {name: "Cleveland Clinic", city: "Cleveland, OH", address: "9500 Euclid Ave, Cleveland, OH 44195", url: "https://my.clevelandclinic.org/", lat: 41.5036, lng: -81.6195},
@@ -99,6 +100,7 @@
         {name: "Massachusetts General Hospital", city: "Boston, MA", address: "55 Fruit St, Boston, MA 02114", url: "https://www.massgeneral.org/", lat: 42.3626, lng: -71.0695},
         {name: "UCLA Medical Center", city: "Los Angeles, CA", address: "757 Westwood Plaza, Los Angeles, CA 90095", url: "https://www.uclahealth.org/", lat: 34.0656, lng: -118.4495},
         {name: "Mount Sinai Hospital", city: "New York, NY", address: "1468 Madison Ave, New York, NY 10029", url: "https://www.mountsinai.org/", lat: 40.7901, lng: -73.9536},
+        {name: "NewYork-Presbyterian Hospital", city: "New York, NY", address: "525 E 68th St, New York, NY 10065", url: "https://www.nyp.org/", lat: 40.764, lng: -73.954},
         {name: "Texas Medical Center", city: "Houston, TX", address: "2450 Holcombe Blvd, Houston, TX 77021", url: "https://www.texasmedicalcenter.org/", lat: 29.7070, lng: -95.4018}
       ];
 
@@ -126,24 +128,29 @@
 
       map.addLayer(markers);
 
-      // 🔍 Custom search: matches by name OR city
+      // Enhanced search: match hospital name OR city
       const searchInput = document.getElementById('hospitalSearch');
       searchInput.addEventListener('input', function() {
         const query = this.value.trim().toLowerCase();
         if (!query) return;
 
-        const match = markerList.find(m =>
+        const matches = markerList.filter(m =>
           m.hospitalData.name.toLowerCase().includes(query) ||
           m.hospitalData.city.toLowerCase().includes(query)
         );
 
-        if (match) {
-          map.setView(match.getLatLng(), 10);
-          match.openPopup();
+        if (matches.length === 1) {
+          // Single match: zoom in close and open popup
+          map.setView(matches[0].getLatLng(), 10);
+          matches[0].openPopup();
+        } else if (matches.length > 1) {
+          // Multiple matches: fit map bounds to all results
+          const group = L.featureGroup(matches);
+          map.fitBounds(group.getBounds().pad(0.3));
+          matches.forEach(m => m.openPopup());
         }
       });
     })();
   </script>
 </body>
 </html>
-
