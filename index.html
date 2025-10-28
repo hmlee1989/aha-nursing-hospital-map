@@ -69,9 +69,9 @@
       }).addTo(map);
 
       const hospitals = [
-        {name: "Mayo Clinic", city: "Rochester, MN", lat: 44.0216, lng: -92.4699},
-        {name: "Cleveland Clinic", city: "Cleveland, OH", lat: 41.5036, lng: -81.6195},
-        {name: "Johns Hopkins Hospital", city: "Baltimore, MD", lat: 39.2965, lng: -76.5920},
+{name: "Mayo Clinic", city: "Rochester, MN", address: "200 First St SW, Rochester, MN 55905", url: "https://www.mayoclinic.org/", lat: 44.0216, lng: -92.4699},
+{name: "Cleveland Clinic", city: "Cleveland, OH", address: "9500 Euclid Ave, Cleveland, OH 44195", url: "https://my.clevelandclinic.org/", lat: 41.5036, lng: -81.6195},
+{name: "Johns Hopkins Hospital", city: "Baltimore, MD", address: "1800 Orleans St, Baltimore, MD 21287", url: "https://www.hopkinsmedicine.org/", lat: 39.2965, lng: -76.5920},
         {name: "Massachusetts General Hospital", city: "Boston, MA", lat: 42.3626, lng: -71.0695},
         {name: "UCLA Medical Center", city: "Los Angeles, CA", lat: 34.0656, lng: -118.4495},
         {name: "Mount Sinai Hospital", city: "New York, NY", lat: 40.7901, lng: -73.9536},
@@ -89,9 +89,14 @@
 
       hospitals.forEach(h => {
         const marker = L.marker([h.lat, h.lng], { icon: hospitalIcon })
-          .bindPopup(`<strong style='color:#c10e21;'>${h.name}</strong><br><span style='color:#868e96;'>${h.city}</span>`);
-        markers.addLayer(marker);
-      });
+          .bindPopup(`
+  <div style='font-family: Aptos, sans-serif; line-height: 1.4;'>
+    <strong style='color:#c10e21;'>${h.name}</strong><br>
+    <span style='color:#868e96;'>${h.address}</span><br>
+    <a href='${h.url}' target='_blank' style='color:#17a2b8; text-decoration:none;'>Visit website →</a>
+  </div>
+`);
+
 
       map.addLayer(markers);
     })();
