@@ -68,65 +68,65 @@
         attribution: '© OpenStreetMap contributors © CARTO'
       }).addTo(map);
 
-const hospitals = [
-  {
-    name: "Mayo Clinic",
-    city: "Rochester, MN",
-    address: "200 First St SW, Rochester, MN 55905",
-    url: "https://www.mayoclinic.org/",
-    lat: 44.0216,
-    lng: -92.4699
-  },
-  {
-    name: "Cleveland Clinic",
-    city: "Cleveland, OH",
-    address: "9500 Euclid Ave, Cleveland, OH 44195",
-    url: "https://my.clevelandclinic.org/",
-    lat: 41.5036,
-    lng: -81.6195
-  },
-  {
-    name: "Johns Hopkins Hospital",
-    city: "Baltimore, MD",
-    address: "1800 Orleans St, Baltimore, MD 21287",
-    url: "https://www.hopkinsmedicine.org/",
-    lat: 39.2965,
-    lng: -76.5920
-  },
-  {
-    name: "Massachusetts General Hospital",
-    city: "Boston, MA",
-    address: "55 Fruit St, Boston, MA 02114",
-    url: "https://www.massgeneral.org/",
-    lat: 42.3626,
-    lng: -71.0695
-  },
-  {
-    name: "UCLA Medical Center",
-    city: "Los Angeles, CA",
-    address: "757 Westwood Plaza, Los Angeles, CA 90095",
-    url: "https://www.uclahealth.org/",
-    lat: 34.0656,
-    lng: -118.4495
-  },
-  {
-    name: "Mount Sinai Hospital",
-    city: "New York, NY",
-    address: "1468 Madison Ave, New York, NY 10029",
-    url: "https://www.mountsinai.org/",
-    lat: 40.7901,
-    lng: -73.9536
-  },
-  {
-    name: "Texas Medical Center",
-    city: "Houston, TX",
-    address: "2450 Holcombe Blvd, Houston, TX 77021",
-    url: "https://www.texasmedicalcenter.org/",
-    lat: 29.7070,
-    lng: -95.4018
-  }
-];
-
+      // Hospital data
+      const hospitals = [
+        {
+          name: "Mayo Clinic",
+          city: "Rochester, MN",
+          address: "200 First St SW, Rochester, MN 55905",
+          url: "https://www.mayoclinic.org/",
+          lat: 44.0216,
+          lng: -92.4699
+        },
+        {
+          name: "Cleveland Clinic",
+          city: "Cleveland, OH",
+          address: "9500 Euclid Ave, Cleveland, OH 44195",
+          url: "https://my.clevelandclinic.org/",
+          lat: 41.5036,
+          lng: -81.6195
+        },
+        {
+          name: "Johns Hopkins Hospital",
+          city: "Baltimore, MD",
+          address: "1800 Orleans St, Baltimore, MD 21287",
+          url: "https://www.hopkinsmedicine.org/",
+          lat: 39.2965,
+          lng: -76.5920
+        },
+        {
+          name: "Massachusetts General Hospital",
+          city: "Boston, MA",
+          address: "55 Fruit St, Boston, MA 02114",
+          url: "https://www.massgeneral.org/",
+          lat: 42.3626,
+          lng: -71.0695
+        },
+        {
+          name: "UCLA Medical Center",
+          city: "Los Angeles, CA",
+          address: "757 Westwood Plaza, Los Angeles, CA 90095",
+          url: "https://www.uclahealth.org/",
+          lat: 34.0656,
+          lng: -118.4495
+        },
+        {
+          name: "Mount Sinai Hospital",
+          city: "New York, NY",
+          address: "1468 Madison Ave, New York, NY 10029",
+          url: "https://www.mountsinai.org/",
+          lat: 40.7901,
+          lng: -73.9536
+        },
+        {
+          name: "Texas Medical Center",
+          city: "Houston, TX",
+          address: "2450 Holcombe Blvd, Houston, TX 77021",
+          url: "https://www.texasmedicalcenter.org/",
+          lat: 29.7070,
+          lng: -95.4018
+        }
+      ];
 
       const markers = L.markerClusterGroup();
 
@@ -137,24 +137,22 @@ const hospitals = [
         popupAnchor: [0, -30]
       });
 
-hospitals.forEach(h => {
-  const address = h.address ? h.address : "Address not available";
-  const website = h.url
-    ? `<a href='${h.url}' target='_blank' style='color:#17a2b8; text-decoration:none;'>Visit website →</a>`
-    : "<span style='color:#868e96;'>Website not available</span>";
+      // Create and add markers
+      hospitals.forEach(h => {
+        const marker = L.marker([h.lat, h.lng], { icon: hospitalIcon })
+          .bindPopup(`
+            <div style='font-family: Aptos, sans-serif; line-height: 1.4;'>
+              <strong style='color:#c10e21;'>${h.name}</strong><br>
+              <span style='color:#868e96;'>${h.address}</span><br>
+              <a href='${h.url}' target='_blank' style='color:#17a2b8; text-decoration:none;'>Visit website →</a>
+            </div>
+          `);
+        markers.addLayer(marker);
+      });
 
-  const marker = L.marker([h.lat, h.lng], { icon: hospitalIcon })
-    .bindPopup(`
-      <div style='font-family: Aptos, sans-serif; line-height: 1.4;'>
-        <strong style='color:#c10e21;'>${h.name}</strong><br>
-        <span style='color:#868e96;'>${address}</span><br>
-        ${website}
-      </div>
-    `);
-
-  markers.addLayer(marker);
-});
-
+      // ✅ This line was missing — adds all markers to the map
+      map.addLayer(markers);
+    })();
   </script>
 </body>
 </html>
