@@ -68,15 +68,65 @@
         attribution: '© OpenStreetMap contributors © CARTO'
       }).addTo(map);
 
-      const hospitals = [
-{name: "Mayo Clinic", city: "Rochester, MN", address: "200 First St SW, Rochester, MN 55905", url: "https://www.mayoclinic.org/", lat: 44.0216, lng: -92.4699},
-{name: "Cleveland Clinic", city: "Cleveland, OH", address: "9500 Euclid Ave, Cleveland, OH 44195", url: "https://my.clevelandclinic.org/", lat: 41.5036, lng: -81.6195},
-{name: "Johns Hopkins Hospital", city: "Baltimore, MD", address: "1800 Orleans St, Baltimore, MD 21287", url: "https://www.hopkinsmedicine.org/", lat: 39.2965, lng: -76.5920},
-        {name: "Massachusetts General Hospital", city: "Boston, MA", lat: 42.3626, lng: -71.0695},
-        {name: "UCLA Medical Center", city: "Los Angeles, CA", lat: 34.0656, lng: -118.4495},
-        {name: "Mount Sinai Hospital", city: "New York, NY", lat: 40.7901, lng: -73.9536},
-        {name: "Texas Medical Center", city: "Houston, TX", lat: 29.7070, lng: -95.4018}
-      ];
+const hospitals = [
+  {
+    name: "Mayo Clinic",
+    city: "Rochester, MN",
+    address: "200 First St SW, Rochester, MN 55905",
+    url: "https://www.mayoclinic.org/",
+    lat: 44.0216,
+    lng: -92.4699
+  },
+  {
+    name: "Cleveland Clinic",
+    city: "Cleveland, OH",
+    address: "9500 Euclid Ave, Cleveland, OH 44195",
+    url: "https://my.clevelandclinic.org/",
+    lat: 41.5036,
+    lng: -81.6195
+  },
+  {
+    name: "Johns Hopkins Hospital",
+    city: "Baltimore, MD",
+    address: "1800 Orleans St, Baltimore, MD 21287",
+    url: "https://www.hopkinsmedicine.org/",
+    lat: 39.2965,
+    lng: -76.5920
+  },
+  {
+    name: "Massachusetts General Hospital",
+    city: "Boston, MA",
+    address: "55 Fruit St, Boston, MA 02114",
+    url: "https://www.massgeneral.org/",
+    lat: 42.3626,
+    lng: -71.0695
+  },
+  {
+    name: "UCLA Medical Center",
+    city: "Los Angeles, CA",
+    address: "757 Westwood Plaza, Los Angeles, CA 90095",
+    url: "https://www.uclahealth.org/",
+    lat: 34.0656,
+    lng: -118.4495
+  },
+  {
+    name: "Mount Sinai Hospital",
+    city: "New York, NY",
+    address: "1468 Madison Ave, New York, NY 10029",
+    url: "https://www.mountsinai.org/",
+    lat: 40.7901,
+    lng: -73.9536
+  },
+  {
+    name: "Texas Medical Center",
+    city: "Houston, TX",
+    address: "2450 Holcombe Blvd, Houston, TX 77021",
+    url: "https://www.texasmedicalcenter.org/",
+    lat: 29.7070,
+    lng: -95.4018
+  }
+];
+
 
       const markers = L.markerClusterGroup();
 
