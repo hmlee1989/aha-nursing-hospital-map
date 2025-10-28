@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospital Locations Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+  
+  <style>
+    body {
+      font-family: Aptos, sans-serif;
+      color: #132f45;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 40px 0;
+    }
+    .map-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+    .map-header {
+      background-color: #c10e21;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .map-header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .map-header p {
+      margin: 8px 0 0;
+      font-size: 16px;
+    }
+    #hospitalMap {
+      height: 500px;
+      width: 100%;
+      border-top: 2px solid #868e96;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="map-container">
+    <div class="map-header">
+      <h2>Hospital Locations</h2>
+      <p>Explore hospital locations across the U.S. — click markers to learn more.</p>
+    </div>
+    <div id="hospitalMap"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+  <script>
+    (function() {
+      const map = L.map('hospitalMap').setView([39.8283, -98.5795], 4);
+
+      // Grayscale tiles for a clean background
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors © CARTO'
+      }).addTo(map);
+
+      const hospitals = [
+        {name: "Mayo Clinic", city: "Rochester, MN", lat: 44.0216, lng: -92.4699},
+        {name: "Cleveland Clinic", city: "Cleveland, OH", lat: 41.5036, lng: -81.6195},
+        {name: "Johns Hopkins Hospital", city: "Baltimore, MD", lat: 39.2965, lng: -76.5920},
+        {name: "Massachusetts General Hospital", city: "Boston, MA", lat: 42.3626, lng: -71.0695},
+        {name: "UCLA Medical Center", city: "Los Angeles, CA", lat: 34.0656, lng: -118.4495},
+        {name: "Mount Sinai Hospital", city: "New York, NY", lat: 40.7901, lng: -73.9536},
+        {name: "Texas Medical Center", city: "Houston, TX", lat: 29.7070, lng: -95.4018}
+      ];
+
+      const markers = L.markerClusterGroup();
+
+      const hospitalIcon = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/2965/2965567.png',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30]
+      });
+
+      hospitals.forEach(h => {
+        const marker = L.marker([h.lat, h.lng], { icon: hospitalIcon })
+          .bindPopup(`<strong style='color:#c10e21;'>${h.name}</strong><br><span style='color:#868e96;'>${h.city}</span>`);
+        markers.addLayer(marker);
+      });
+
+      map.addLayer(markers);
+    })();
+  </script>
+</body>
+</html>
