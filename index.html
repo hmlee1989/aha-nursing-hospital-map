@@ -88,17 +88,22 @@
       });
 
 hospitals.forEach(h => {
+  const address = h.address ? h.address : "Address not available";
+  const website = h.url
+    ? `<a href='${h.url}' target='_blank' style='color:#17a2b8; text-decoration:none;'>Visit website →</a>`
+    : "<span style='color:#868e96;'>Website not available</span>";
+
   const marker = L.marker([h.lat, h.lng], { icon: hospitalIcon })
     .bindPopup(`
       <div style='font-family: Aptos, sans-serif; line-height: 1.4;'>
         <strong style='color:#c10e21;'>${h.name}</strong><br>
-        <span style='color:#868e96;'>${h.address || ''}</span><br>
-        ${h.url ? `<a href='${h.url}' target='_blank' style='color:#17a2b8; text-decoration:none;'>Visit website →</a>` : ''}
+        <span style='color:#868e96;'>${address}</span><br>
+        ${website}
       </div>
     `);
+
   markers.addLayer(marker);
 });
-
 
   </script>
 </body>
