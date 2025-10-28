@@ -92,12 +92,13 @@ hospitals.forEach(h => {
     .bindPopup(`
       <div style='font-family: Aptos, sans-serif; line-height: 1.4;'>
         <strong style='color:#c10e21;'>${h.name}</strong><br>
-        <span style='color:#868e96;'>${h.address}</span><br>
-        <a href='${h.url}' target='_blank' style='color:#17a2b8; text-decoration:none;'>Visit website →</a>
+        <span style='color:#868e96;'>${h.address || ''}</span><br>
+        ${h.url ? `<a href='${h.url}' target='_blank' style='color:#17a2b8; text-decoration:none;'>Visit website →</a>` : ''}
       </div>
     `);
   markers.addLayer(marker);
 });
+
 
   </script>
 </body>
