@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-search/dist/leaflet-search.min.css" />
+
   <style>
     body {
       font-family: Aptos, sans-serif;
@@ -51,19 +52,20 @@
   <div class="map-container">
     <div class="map-header">
       <h2>Hospital Locations</h2>
-      <p>Explore hospital locations across the U.S. — click markers to learn more.</p>
+      <p>Explore hospital locations across the U.S. — click markers or use the search bar below.</p>
     </div>
     <div id="hospitalMap"></div>
   </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/leaflet-control-search/dist/leaflet-search.min.js"></script>
 
   <script>
     (function() {
       const map = L.map('hospitalMap').setView([39.8283, -98.5795], 4);
 
-      // Grayscale tiles for a clean background
+      // Grayscale tiles
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap contributors © CARTO'
       }).addTo(map);
@@ -72,7 +74,6 @@
       const hospitals = [
         {
           name: "Mayo Clinic",
-          city: "Rochester, MN",
           address: "200 First St SW, Rochester, MN 55905",
           url: "https://www.mayoclinic.org/",
           lat: 44.0216,
@@ -80,7 +81,6 @@
         },
         {
           name: "Cleveland Clinic",
-          city: "Cleveland, OH",
           address: "9500 Euclid Ave, Cleveland, OH 44195",
           url: "https://my.clevelandclinic.org/",
           lat: 41.5036,
@@ -88,7 +88,6 @@
         },
         {
           name: "Johns Hopkins Hospital",
-          city: "Baltimore, MD",
           address: "1800 Orleans St, Baltimore, MD 21287",
           url: "https://www.hopkinsmedicine.org/",
           lat: 39.2965,
@@ -96,7 +95,6 @@
         },
         {
           name: "Massachusetts General Hospital",
-          city: "Boston, MA",
           address: "55 Fruit St, Boston, MA 02114",
           url: "https://www.massgeneral.org/",
           lat: 42.3626,
@@ -104,7 +102,6 @@
         },
         {
           name: "UCLA Medical Center",
-          city: "Los Angeles, CA",
           address: "757 Westwood Plaza, Los Angeles, CA 90095",
           url: "https://www.uclahealth.org/",
           lat: 34.0656,
@@ -112,7 +109,6 @@
         },
         {
           name: "Mount Sinai Hospital",
-          city: "New York, NY",
           address: "1468 Madison Ave, New York, NY 10029",
           url: "https://www.mountsinai.org/",
           lat: 40.7901,
@@ -120,7 +116,6 @@
         },
         {
           name: "Texas Medical Center",
-          city: "Houston, TX",
           address: "2450 Holcombe Blvd, Houston, TX 77021",
           url: "https://www.texasmedicalcenter.org/",
           lat: 29.7070,
@@ -129,6 +124,7 @@
       ];
 
       const markers = L.markerClusterGroup();
+      const markerList = [];
 
       const hospitalIcon = L.icon({
         iconUrl: 'https://img.icons8.com/?size=100&id=rBh1fuOC6Bjx&format=png&color=000000',
@@ -137,7 +133,7 @@
         popupAnchor: [0, -30]
       });
 
-      // Create and add markers
+      // Add markers
       hospitals.forEach(h => {
         const marker = L.marker([h.lat, h.lng], { icon: hospitalIcon })
           .bindPopup(`
@@ -147,11 +143,29 @@
               <a href='${h.url}' target='_blank' style='color:#17a2b8; text-decoration:none;'>Visit website →</a>
             </div>
           `);
+        marker.bindTooltip(h.name);
         markers.addLayer(marker);
+        markerList.push(marker);
       });
 
-      // ✅ This line was missing — adds all markers to the map
       map.addLayer(markers);
+
+      // Add search control
+      const searchControl = new L.Control.Search({
+        layer: markers,
+        propertyName: 'name',
+        zoom: 8,
+        marker: false,
+        moveToLocation: function(latlng, title, map) {
+          map.setView(latlng, 10);
+        }
+      });
+
+      searchControl.on('search:locationfound', e => {
+        e.layer.openPopup();
+      });
+
+      map.addControl(searchControl);
     })();
   </script>
 </body>
