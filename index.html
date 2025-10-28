@@ -45,6 +45,28 @@
       width: 100%;
       border-top: 2px solid #868e96;
     }
+    /* Style the search bar */
+    .leaflet-control-search {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+    }
+    .leaflet-control-search input {
+      border: 2px solid #c10e21 !important;
+      border-radius: 8px !important;
+      padding: 6px 10px !important;
+      width: 200px !important;
+      font-size: 14px !important;
+      color: #132f45 !important;
+    }
+    .leaflet-control-search input:focus {
+      outline: none !important;
+      border-color: #17a2b8 !important;
+    }
+    .leaflet-control-search .search-button {
+      background-color: #c10e21 !important;
+      color: white !important;
+    }
   </style>
 </head>
 <body>
@@ -72,60 +94,16 @@
 
       // Hospital data
       const hospitals = [
-        {
-          name: "Mayo Clinic",
-          address: "200 First St SW, Rochester, MN 55905",
-          url: "https://www.mayoclinic.org/",
-          lat: 44.0216,
-          lng: -92.4699
-        },
-        {
-          name: "Cleveland Clinic",
-          address: "9500 Euclid Ave, Cleveland, OH 44195",
-          url: "https://my.clevelandclinic.org/",
-          lat: 41.5036,
-          lng: -81.6195
-        },
-        {
-          name: "Johns Hopkins Hospital",
-          address: "1800 Orleans St, Baltimore, MD 21287",
-          url: "https://www.hopkinsmedicine.org/",
-          lat: 39.2965,
-          lng: -76.5920
-        },
-        {
-          name: "Massachusetts General Hospital",
-          address: "55 Fruit St, Boston, MA 02114",
-          url: "https://www.massgeneral.org/",
-          lat: 42.3626,
-          lng: -71.0695
-        },
-        {
-          name: "UCLA Medical Center",
-          address: "757 Westwood Plaza, Los Angeles, CA 90095",
-          url: "https://www.uclahealth.org/",
-          lat: 34.0656,
-          lng: -118.4495
-        },
-        {
-          name: "Mount Sinai Hospital",
-          address: "1468 Madison Ave, New York, NY 10029",
-          url: "https://www.mountsinai.org/",
-          lat: 40.7901,
-          lng: -73.9536
-        },
-        {
-          name: "Texas Medical Center",
-          address: "2450 Holcombe Blvd, Houston, TX 77021",
-          url: "https://www.texasmedicalcenter.org/",
-          lat: 29.7070,
-          lng: -95.4018
-        }
+        {name: "Mayo Clinic", address: "200 First St SW, Rochester, MN 55905", url: "https://www.mayoclinic.org/", lat: 44.0216, lng: -92.4699},
+        {name: "Cleveland Clinic", address: "9500 Euclid Ave, Cleveland, OH 44195", url: "https://my.clevelandclinic.org/", lat: 41.5036, lng: -81.6195},
+        {name: "Johns Hopkins Hospital", address: "1800 Orleans St, Baltimore, MD 21287", url: "https://www.hopkinsmedicine.org/", lat: 39.2965, lng: -76.5920},
+        {name: "Massachusetts General Hospital", address: "55 Fruit St, Boston, MA 02114", url: "https://www.massgeneral.org/", lat: 42.3626, lng: -71.0695},
+        {name: "UCLA Medical Center", address: "757 Westwood Plaza, Los Angeles, CA 90095", url: "https://www.uclahealth.org/", lat: 34.0656, lng: -118.4495},
+        {name: "Mount Sinai Hospital", address: "1468 Madison Ave, New York, NY 10029", url: "https://www.mountsinai.org/", lat: 40.7901, lng: -73.9536},
+        {name: "Texas Medical Center", address: "2450 Holcombe Blvd, Houston, TX 77021", url: "https://www.texasmedicalcenter.org/", lat: 29.7070, lng: -95.4018}
       ];
 
       const markers = L.markerClusterGroup();
-      const markerList = [];
-
       const hospitalIcon = L.icon({
         iconUrl: 'https://img.icons8.com/?size=100&id=rBh1fuOC6Bjx&format=png&color=000000',
         iconSize: [30, 30],
@@ -145,15 +123,15 @@
           `);
         marker.bindTooltip(h.name);
         markers.addLayer(marker);
-        markerList.push(marker);
       });
 
       map.addLayer(markers);
 
-      // Add search control
+      // Add styled search control
       const searchControl = new L.Control.Search({
         layer: markers,
         propertyName: 'name',
+        position: 'topleft',
         zoom: 8,
         marker: false,
         moveToLocation: function(latlng, title, map) {
